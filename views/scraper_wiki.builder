@@ -8,7 +8,7 @@ xml.table(:xmlns => 'http://query.yahooapis.com/v1/schema/table.xsd') { |t|
   t.bindings {|b|
     b.select(:itemPath=>'result.entries',:produces=>'JSON') { |s|
        s.urls { |u|
-         u.url('http://api.scraperwiki.com/api/1.0/datastore/search')
+         u.url('http://api.scraperwiki.com/api/1.0/datastore')
        }
        s.paging(:model=>'offset')  { |p|
          p.start(:id=>'offset',:default=>'0')
@@ -21,14 +21,19 @@ xml.table(:xmlns => 'http://query.yahooapis.com/v1/schema/table.xsd') { |t|
          end
        }
        jscript_keys = keys.map do |key|
-         %$if (#{key}) { params.push("#{key},"+#{key}); }$
-       end.join("\n")
+          %$if (#{key}) { params.push("#{key},"+#{key}); }$
+        end.join("\n")
        s.execute { |e|
          jscript = %$request.query("name","#{name}");
          request.query("format","json");
          var params = [];
          #{jscript_keys}
-         request.query("filter",params.join("|"));       
+         if(params.length > 0) {
+            request.path("search");
+            request.query("filter",params.join("|"));       
+         } else {
+           request.path("getData");
+         }
          try { 
             var tb = request.get().response;
             var tbl = eval(tb);
