@@ -32,7 +32,7 @@ xml.table(:xmlns => 'http://query.yahooapis.com/v1/schema/table.xsd') { |t|
             request.path("search");
             request.query("filter",params.join("|"));       
          } else {
-           request.path("getData");
+           request.path("getdata");
          }
          try { 
             var tb = request.get().response;
