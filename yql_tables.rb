@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'open-uri'
 require 'json'
+require 'builder'
 
 SW_API_KEY = ENV['SW_API_KEY']
 
